@@ -1,15 +1,52 @@
 import streamlit as st
 
-password = "Budget-budy2266!"
-# 1. Simple Password Gate
+passw = 'budget-budy2266'
+# --- 1. THE PASSWORD ENGINE ---
 def check_password():
-    if "password_correct" not in st.session_state:
-        st.text_input("Enter Password", type="password", on_change=lambda: st.session_state.update({"password_correct": st.session_state.password == password}), key="password")
-        return False
-    return st.session_state["password_correct"]
+    """Returns True if the user had the correct password."""
 
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if st.session_state["password"] == passw: # <-- CHANGE THIS
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # don't store password
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        # First run, show input for password.
+        st.title("🔒 Private Access")
+        with st.form("login_form"):
+            st.text_input("Enter Password", type="password", key="password")
+            submit = st.form_submit_label="Login"
+            if st.form_submit_button("Submit"):
+                password_entered()
+                st.rerun()
+        return False
+    
+    elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
+        st.title("🔒 Private Access")
+        with st.form("login_form"):
+            st.text_input("Enter Password", type="password", key="password")
+            if st.form_submit_button("Submit"):
+                password_entered()
+                st.rerun()
+        st.error("😕 Password incorrect")
+        return False
+    else:
+        # Password correct.
+        return True
+
+# --- 2. THE APP GUARD ---
 if not check_password():
-    st.stop()  # Stop right here if password is wrong
+    st.stop() # Execution stops here if not logged in
+
+# --- 3. YOUR ACTUAL BUDGET CODE STARTS HERE ---
+st.success("Access Granted")
+st.title("📊 Our 2026 Financial Freedom Tracker")
+
+# ... rest of your month expanders go here ...
 
 # 2. Your Actual App Code Starts Here...
 st.title("Our Budget 2026")
