@@ -1,5 +1,21 @@
 import streamlit as st
 
+password = "Budget-budy2266!"
+# 1. Simple Password Gate
+def check_password():
+    if "password_correct" not in st.session_state:
+        st.text_input("Enter Password", type="password", on_change=lambda: st.session_state.update({"password_correct": st.session_state.password == password}), key="password")
+        return False
+    return st.session_state["password_correct"]
+
+if not check_password():
+    st.stop()  # Stop right here if password is wrong
+
+# 2. Your Actual App Code Starts Here...
+st.title("Our Budget 2026")
+# ... the rest of your code ...
+
+
 # --- APP CONFIG ---
 st.set_page_config(page_title="Budget 2026", page_icon="📈", layout="centered")
 
